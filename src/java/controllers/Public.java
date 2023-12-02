@@ -57,10 +57,14 @@ public class Public extends HttpServlet {
         String password = ((String) request.getParameter("password"));
         String verifyPassword = ((String) request.getParameter("verify-password"));
 
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
 
         if (!Validation.isEmail(email)) {
             errors.add("Email entered is invalid. A valid format looks like this: example@somesite.com");
+        }
+        
+        if (Validation.isValidEmail(email)) {
+            errors.add("The email you entered is already tied with an account.");
         }
 
         if (!Validation.isValidUsername(username)) {
@@ -75,7 +79,7 @@ public class Public extends HttpServlet {
             errors.add("The password and password verification fields don't match.");
         }
 
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             url = "/register.jsp";
             request.setAttribute("errors", errors);
         } else {
@@ -85,10 +89,9 @@ public class Public extends HttpServlet {
             } catch (SQLException ex) {
                 url = "/register.jsp";
                 errors.add("Something went wrong when registering the user: " + ex.getMessage());
-                request.setAttribute("errors", errors);;
+        request.setAttribute("errors", errors);
                 Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+            }                   
         }
     }
 
@@ -96,16 +99,16 @@ public class Public extends HttpServlet {
         String usernameOrEmail = ((String) request.getParameter("email-or-username"));
         String password = ((String) request.getParameter("password"));
 
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
 
-        if (usernameOrEmail == null) {
+        if (usernameOrEmail.equals("")) {
             errors.add("Username/email is null.");
             url = "/login.jsp";
             request.setAttribute("errors", errors);
             return;
         }
 
-        if (password == null) {
+        if (password.equals("")) {
             errors.add("Password is null.");
             url = "/login.jsp";
             request.setAttribute("errors", errors);

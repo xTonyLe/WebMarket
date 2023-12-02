@@ -53,6 +53,10 @@ public class Validation {
             LOG.log(Level.SEVERE, "*** SQL error in checking username.");
         }
         
+        if (!rs) {
+            result = true;
+        }
+        
         return result;
     }
     
