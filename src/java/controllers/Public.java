@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
  * @author Tony Le
  */
 public class Public extends HttpServlet {
-
     String url = "";
     User loggedInUser = null;
 
@@ -123,9 +122,9 @@ public class Public extends HttpServlet {
                 request.getSession().setAttribute("loggedInUser", loggedInUser);
                 
                 if (loggedInUser.getUserType().equals("admin")) {
-                    url = "/admin/adminPage.jsp";
+                    url = "/index.jsp";
                 } else {
-                    url = "/userPage.jsp";
+                    url = "/index.jsp";
                 }            
             } catch (Exception e) {
                 errors.add("A user with the provided details does not exist.");
@@ -176,5 +175,4 @@ public class Public extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

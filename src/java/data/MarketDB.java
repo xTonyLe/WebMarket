@@ -232,6 +232,86 @@ public class MarketDB {
         }
     }
 
+    public static int deleteUser(int userID) throws SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "DELETE FROM users "
+                + "WHERE userID = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, userID);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "*** delete user sql", e);
+            throw e;
+        } finally {
+            try {
+                ps.close();
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                LOG.log(Level.SEVERE, "*** delete user null pointer?", e);
+                throw e;
+            }
+        }
+    }
+    
+    public static int insertProduct(Product product) throws SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        
+        String query
+                = "INSERT INTO products (productName, productDetails, productPrice) "
+                + "VALUES (?, ?, ?)";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, product.getProductName());
+            ps.setString(2, product.getProductDetails());
+            ps.setDouble(3, product.getProductPrice());
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "*** insert product sql", e);
+            throw e;
+        } finally {
+            try {
+                ps.close();
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                LOG.log(Level.SEVERE, "*** insert product null pointer?", e);
+                throw e;
+            }
+        }
+    }
+    
+    public static int deleteProduct(int productID) throws SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        
+        String query
+                = "DELETE FROM products "
+                + "WHERE productID = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, productID);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "*** delete product sql", e);
+            throw e;
+        } finally {
+            try {
+                ps.close();
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                LOG.log(Level.SEVERE, "*** delete product null pointer?", e);
+                throw e;
+            }
+        }
+    }
+
     public static User getUserInfo(String usernameOrEmail, String password) throws SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -314,6 +394,71 @@ public class MarketDB {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 LOG.log(Level.SEVERE, "*** get password null pointer?", e);
+                throw e;
+            }
+        }
+    }
+
+    public static ArrayList<Product> selectAllProducts() throws SQLException {
+        ArrayList<Product> products = new ArrayList();
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query
+                = "SELECT *"
+                + " FROM products";
+        try {
+            ps = connection.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int productID = rs.getInt("productID");
+                String productName = rs.getString("productName");
+                String productDetails = rs.getString("productDetails");
+                double productPrice = rs.getDouble("productPrice");
+                Product product = new Product(productID, productName, productDetails, productPrice);
+                products.add(product);
+            }
+            return products;
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "*** get products", e);
+            throw e;
+        } finally {
+            try {
+                ps.close();
+                rs.close();
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                LOG.log(Level.SEVERE, "*** get products null pointer?", e);
+                throw e;
+            }
+        }
+    }
+
+    public static int addToCart(Cart cart) throws SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "INSERT INTO cart (userID, productID, quantity) "
+                + "VALUES (?, ?, ?)";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, cart.getUserID());
+            ps.setInt(2, cart.getProductID());
+            ps.setInt(3, cart.getQuantity());
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "*** insert sql", e);
+            throw e;
+        } finally {
+            try {
+                ps.close();
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                LOG.log(Level.SEVERE, "*** insert null pointer?", e);
                 throw e;
             }
         }

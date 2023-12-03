@@ -4,12 +4,18 @@
  */
 package controllers;
 
+import business.*;
+import data.MarketDB;
+import data.security.SecurityUtil;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  *
@@ -17,30 +23,167 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class Private extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    String url = "";
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Private</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Private at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+        User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
+
+        if (loggedInUser == null) {
+            response.sendRedirect("Public");
+            return;
         }
+
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "default";
+        }
+
+        switch (action) {
+            case "logout": {
+                logout(request);
+
+                break;
+            }
+            case "productList": {
+                url = "/products.jsp";
+                ArrayList<Product> allProducts = new ArrayList();
+
+                try {
+                    allProducts = MarketDB.selectAllProducts();
+                } catch (SQLException e) {
+                    Logger.getLogger(MarketDB.class.getName()).log(Level.SEVERE, null, e);
+                }
+
+                request.setAttribute("allProducts", allProducts);
+                break;
+            }
+            case "productListAdmin": {
+                url = "/adminProducts.jsp";
+                ArrayList<Product> allProducts = new ArrayList();
+                
+                try {
+                    allProducts = MarketDB.selectAllProducts();
+                } catch (SQLException e) {
+                    Logger.getLogger(MarketDB.class.getName()).log(Level.SEVERE, null, e);
+                }
+                
+                request.setAttribute("allProducts", allProducts);
+                break;
+            }
+            case "addToCart": {
+                url = "/cart.jsp";
+
+                int productID = 0;
+
+                try {
+                    productID = Integer.parseInt(request.getParameter("productID"));
+                } catch (NumberFormatException en) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, en);
+                }
+
+                int quantity = 0;
+
+                try {
+                    quantity = Integer.parseInt(request.getParameter("quantity"));
+                } catch (NumberFormatException en) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, en);
+                }
+
+                Cart cart = new Cart(loggedInUser.getUserID(), productID, quantity);
+
+                try {
+                    MarketDB.addToCart(cart);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                break;
+            }
+            case "gotoCart": {
+                url = "/cart.jsp";
+                
+                break;
+            }
+            case "addProduct": {
+                url = "/addProduct.jsp";
+                
+                break;
+            }
+            case "submitProduct": {
+                String name = request.getParameter("productName");
+                String details = request.getParameter("productDetails");
+                double price = Double.parseDouble(request.getParameter("productPrice"));
+                
+                Product product = new Product(name, details, price);
+                
+                try {
+                    MarketDB.insertProduct(product);
+                } catch (SQLException e) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
+                }
+                
+                url = "/Private?action=productListAdmin";
+                break;
+            }
+            case "deleteProduct": {
+                int productID = 0;
+                
+                try {
+                    productID = Integer.parseInt(request.getParameter("productID"));
+                } catch (NumberFormatException e) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
+                }
+                
+                try {
+                    MarketDB.deleteProduct(productID);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                url = "/Private?action=productListAdmin";
+                break;
+            }
+            case "adminUserAction": {
+                url = "/adminAllUsers.jsp";
+                LinkedHashMap<String, User> allUsers = new LinkedHashMap();
+
+                try {
+                    allUsers = MarketDB.selectAllUsers();
+                } catch (SQLException e) {
+                    Logger.getLogger(MarketDB.class.getName()).log(Level.SEVERE, null, e);
+                }
+
+                request.setAttribute("allUsers", allUsers);
+                break;
+            }
+            case "adminDeleteUser": {
+                int userID = 0;
+
+                try {
+                    userID = Integer.parseInt(request.getParameter("userID"));
+                } catch (NumberFormatException e) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
+                }
+
+                try {
+                    MarketDB.deleteUser(userID);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                url = "/Private?action=adminUserAction";
+                break;
+            }
+        }
+
+        getServletContext().getRequestDispatcher(url).forward(request, response);
+    }
+
+    private void logout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        url = "/Public?action=gotoIndex";
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -81,5 +224,4 @@ public class Private extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

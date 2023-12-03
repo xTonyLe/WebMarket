@@ -23,7 +23,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li class="dropdown-item">
-                                <a href="Private?action=gotoAdminMovie" class="nav-link text-dark">Admin Movies</a>
+                                <a href="Private?action=productListAdmin" class="nav-link text-dark">Admin Products</a>
                             </li>
                             <li class="dropdown-item">
                                 <a href="Private?action=adminUserAction" class="nav-link text-dark">Admin Users</a>
@@ -34,19 +34,13 @@
                 </c:if>
                 <c:if test="${not empty loggedInUser || loggedInUser != null}">
                     <li class="nav-item">
-                        <a href="Private?action=movieList" class="nav-link text-dark">Movies</a>
+                        <a href="Private?action=productList" class="nav-link text-dark">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a href="Private?action=gotoMovieFilter" class="nav-link text-dark">Movie Filter</a>
+                        <a href="Private?action=gotoCart" class="nav-link text-dark">Cart</a>
                     </li>
                     <li class="nav-item">
                         <a href="Private?action=gotoUserPage" class="nav-link text-dark">User Page</a>
-                    </li>               
-                    <li class="nav-item">
-                        <a href="Private?action=top10movies" class="nav-link text-dark">Top 10 Movies</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="Private?action=newReleases" class="nav-link text-dark">New Releases</a>
                     </li>
                     <form action="Private" method="post">
                         <input type="hidden" value="logout" name="action" />
