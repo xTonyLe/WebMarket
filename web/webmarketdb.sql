@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2023 at 06:15 PM
+-- Generation Time: Dec 04, 2023 at 02:22 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -60,6 +60,22 @@ CREATE TABLE `products` (
   `productPrice` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`productID`, `productName`, `productDetails`, `productPrice`) VALUES
+(7, 'Laptop', 'High-performance laptop with SSD storage.', '999.99'),
+(8, 'Wireless Headphones', 'Noise-canceling wireless headphones.', '149.99'),
+(9, 'Smartwatch', 'Fitness tracker with heart rate monitoring.', '129.99'),
+(10, 'Coffee Maker', 'Programmable coffee maker for your daily brew.', '49.99'),
+(11, 'Bluetooth Speaker', 'Portable Bluetooth speaker with enhanced bass.', '79.99'),
+(12, 'Gaming Mouse', 'Precision gaming mouse with customizable LEDs.', '49.99'),
+(13, 'Digital Camera', 'Compact digital camera with 20MP sensor.', '299.99'),
+(14, 'Fitness Tracker', 'Track your steps and calories burned.', '79.99'),
+(15, 'Backpack', 'Waterproof backpack with laptop compartment.', '39.99'),
+(16, 'Blender', 'High-speed blender for smoothies and shakes.', '69.99');
+
 -- --------------------------------------------------------
 
 --
@@ -73,6 +89,14 @@ CREATE TABLE `users` (
   `userType` text NOT NULL,
   `email` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`userID`, `username`, `password`, `userType`, `email`) VALUES
+(2, 'Admin', '8c37fe3044b51319f864f5a010a7b49e$4096$9a13fe46c28c49196b90664a2b0e934699492798246f6f529fb070428ff3a946', 'admin', 'admin@admin.com'),
+(3, 'Tony', '018ee7f19227f7e6d3143212d0a9027b$4096$1f529886771a8e1d403df44d544c69f569721fe636ba700f44d8a836a243256d', 'user', 'tony@tony.com');
 
 --
 -- Indexes for dumped tables
@@ -113,19 +137,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cartID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cartID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `orderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `productID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `productID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
