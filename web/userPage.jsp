@@ -21,41 +21,55 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Web Market - User Page</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <style>
+            .container {
+                text-align: center;
+            }
+            table {
+                margin: 0 auto;
+            }
+        </style>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     </head>
     <body>
         <jsp:include page="/layout/navbar.jsp" />
+        <br>
         <main id="main-content">
             <div class="container">
                 <div class="row">
                     <div class="col-4"></div>
-                    <div class="col-10">
+                    <div class="col-4">
                         <h1>Orders for <c:out value="${loggedInUser.username}"/></h1>
-                    </div>
-                    <table class="table table-striped" border="1" column="1">
-                        <tr class="table-dark">
-                            <th>Order ID</th>                         
-                            <th>Order Date</th>
-                            <th>Order Total</th>
-                            <th></th>
-                        </tr>
-
-                        <c:forEach var="order" items="${allOrders}">
-                            <tr>
-                                <td>${order.orderID}</td>
-                                <td>${order.orderDate}</td>
-                                <td>${order.orderTotal}</td>
-                                <td>
-                                    <form action="Private" method="post">
-                                        <input type="hidden" name="orderID" value="${order.orderID}"/>
-                                        <input type="hidden" name="action" value="deleteOrder">
-                                        <button type="submit" class="btn btn-success">Delete</button>
-                                    </form>
-                                </td>
+                        <br>
+                        <c:if test="${empty allOrders}">
+                            <h5 class="text-secondary">Start shopping now and create your first order with Web Market!</h5>
+                        </c:if>
+                        <c:if test="${not empty allOrders}">
+                        <table class="table table-striped table-bordered">
+                            <tr class="table-dark">
+                                <th>Order ID</th>                         
+                                <th>Order Date</th>
+                                <th>Order Total</th>
+                                <th></th>
                             </tr>
-                        </c:forEach>
-                    </table>
-                </div>               
+                            <c:forEach var="order" items="${allOrders}">
+                                <tr>
+                                    <td>${order.orderID}</td>
+                                    <td>${order.orderDate}</td>
+                                    <td>$${order.orderTotal}</td>
+                                    <td style="width:5%">
+                                        <form action="Private" method="post">
+                                            <input type="hidden" name="orderID" value="${order.orderID}"/>
+                                            <input type="hidden" name="action" value="deleteOrder">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                        </c:if>
+                    </div>
+                </div>
             </div>
         </main>
     </body>

@@ -15,13 +15,13 @@
     </head>
     <body>
         <jsp:include page="layout/navbar.jsp" />
-        <main id="<main-content>">
-            <div class="container">
-                <h1 class="text-center">Welcome to Web Market</h1>
-                <p class="text-center">
-                    Buy stuff pls
-                </p>
-            </div>
-        </main>
+        <br>
+        <h1><center>Welcome to Web Market</center></h1>
+        <br>
+        <div style="text-align: center;">
+        <h4>Welcome to Web Market, your go-to for a streamlined online shopping adventure!                 
+                Our user-friendly interface ensures easy navigation, providing a secure and efficient shopping experience. 
+                Embrace the future of online retail at Web Market – where quality meets convenience. Happy shopping!</h4>
+        </div>
     </body>
 </html>

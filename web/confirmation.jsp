@@ -25,6 +25,11 @@
     </head>
     <body>
         <jsp:include page="/layout/navbar.jsp" />
-        <h1>Thank you for submitting your order!</h1>
+        <br>
+        <h1><center>Thank you for submitting your order!</center></h1>
+        <br>
+        <h4><center>Your order has been received, and we're busy processing it. 
+                We appreciate your business and look forward to delighting you with our products. 
+                If you have any questions or need assistance, feel free to contact our customer support. Happy shopping!</center></h4>
     </body>
 </html>

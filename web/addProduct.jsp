@@ -26,6 +26,7 @@
     </head>
     <body>
         <jsp:include page="layout/navbar.jsp" />
+        <br>
         <main id="main-content">
             <h1 class="text-center">Add a Product</h1>
             <br>
@@ -37,15 +38,15 @@
                             <input type="hidden" name="action" value="submitProduct">
                             <label for="name-field">Product Name</label>
                             <br>
-                            <input type="text" id="name-field" name="productName" class="form-control">
+                            <input type="text" id="name-field" name="productName" class="form-control" required>
                             <br>
                             <label for="details-field">Product Details</label>
                             <br>
-                            <textarea id="details-field" name="productDetails" rows="5" cols="50" class="form-control"></textarea>
+                            <textarea id="details-field" name="productDetails" rows="5" cols="50" class="form-control" required></textarea>
                             <br>
                             <label for="price-field">Product Price</label>
                             <br>
-                            <input type="text" id="price-field" name="productPrice" class="form-control">
+                            <input type="text" id="price-field" name="productPrice" class="form-control" title="Enter a valid price (e.g., 10 or 10.99)" required>
                             <br>                          
                             <button type="submit" class="btn btn-success">Add Product</button>
                         </form>

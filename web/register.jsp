@@ -24,6 +24,7 @@
     </head>
     <body>
         <jsp:include page="layout/navbar.jsp" />
+        <br>
         <main id="main-content">
             <h1 class="text-center">Register for Web Market</h1>
             <br>
@@ -35,7 +36,7 @@
                             <ul class="list-unstyled">
                                 <c:forEach items="${errors}" var="error">
                                     <li class="text-danger">${error}</li>
-                                    </c:forEach>
+                                </c:forEach>
                             </ul>
                         </c:if>
                         <form method="post" action="Public">

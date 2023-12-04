@@ -101,7 +101,7 @@ public class Public extends HttpServlet {
         List<String> errors = new ArrayList<>();
 
         if (usernameOrEmail.equals("")) {
-            errors.add("Username/email is null.");
+            errors.add("Username or Email is null.");
             url = "/login.jsp";
             request.setAttribute("errors", errors);
             return;
