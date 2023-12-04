@@ -37,10 +37,10 @@
                         <a href="Private?action=productList" class="nav-link text-dark">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a href="Private?action=gotoCart" class="nav-link text-dark">Cart</a>
+                        <a href="Private?action=cartItems" class="nav-link text-dark">Cart</a>
                     </li>
                     <li class="nav-item">
-                        <a href="Private?action=gotoUserPage" class="nav-link text-dark">User Page</a>
+                        <a href="Private?action=orderList" class="nav-link text-dark">User Page</a>
                     </li>
                     <form action="Private" method="post">
                         <input type="hidden" value="logout" name="action" />

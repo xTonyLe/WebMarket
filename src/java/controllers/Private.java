@@ -46,6 +46,19 @@ public class Private extends HttpServlet {
 
                 break;
             }
+            case "orderList": {
+                url = "/userPage.jsp";
+                ArrayList<Order> allOrders = new ArrayList();
+
+                try {
+                    allOrders = MarketDB.selectAllOrders();
+                } catch (SQLException e) {
+                    Logger.getLogger(MarketDB.class.getName()).log(Level.SEVERE, null, e);
+                }
+
+                request.setAttribute("allOrders", allOrders);
+                break;
+            }
             case "productList": {
                 url = "/products.jsp";
                 ArrayList<Product> allProducts = new ArrayList();
@@ -62,18 +75,18 @@ public class Private extends HttpServlet {
             case "productListAdmin": {
                 url = "/adminProducts.jsp";
                 ArrayList<Product> allProducts = new ArrayList();
-                
+
                 try {
                     allProducts = MarketDB.selectAllProducts();
                 } catch (SQLException e) {
                     Logger.getLogger(MarketDB.class.getName()).log(Level.SEVERE, null, e);
                 }
-                
+
                 request.setAttribute("allProducts", allProducts);
                 break;
             }
             case "addToCart": {
-                url = "/cart.jsp";
+                url = "/Private?action=cartItems";
 
                 int productID = 0;
 
@@ -101,48 +114,128 @@ public class Private extends HttpServlet {
 
                 break;
             }
-            case "gotoCart": {
+            case "cartItems": {
                 url = "/cart.jsp";
-                
+                ArrayList<CartItem> cartItems = new ArrayList();
+                int userID = loggedInUser.getUserID();
+
+                try {
+                    cartItems = MarketDB.getCartItemsByUserID(userID);
+                } catch (SQLException e) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
+                }
+
+                request.setAttribute("cartItems", cartItems);
+                break;
+            }
+            case "deleteCartItem": {
+                int cartID = 0;
+
+                try {
+                    cartID = Integer.parseInt(request.getParameter("cartID"));
+                } catch (NumberFormatException e) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
+                }
+
+                try {
+                    MarketDB.deleteCartItem(cartID);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                url = "/Private?action=cartItems";
+                break;
+            }
+            case "submitCart": {
+                url = "/confirmation.jsp";
+
+                int userID = loggedInUser.getUserID();
+
+                ArrayList<CartItem> cartItems = new ArrayList();
+
+                try {
+                    cartItems = MarketDB.getCartItemsByUserID(userID);
+                } catch (SQLException e) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
+                }
+
+                double orderTotal = 0;
+
+                for (CartItem cartItem : cartItems) {
+                    orderTotal += cartItem.getProductPrice();
+                }
+
+                Order order = new Order(userID, LocalDate.now(), orderTotal);
+
+                try {
+                    MarketDB.submitCart(order);
+                } catch (SQLException e) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
+                }
+
+                try {
+                    MarketDB.clearCart(userID);
+                } catch (SQLException e) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
+                }
+
                 break;
             }
             case "addProduct": {
                 url = "/addProduct.jsp";
-                
+
                 break;
             }
             case "submitProduct": {
                 String name = request.getParameter("productName");
                 String details = request.getParameter("productDetails");
                 double price = Double.parseDouble(request.getParameter("productPrice"));
-                
+
                 Product product = new Product(name, details, price);
-                
+
                 try {
                     MarketDB.insertProduct(product);
                 } catch (SQLException e) {
                     Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
                 }
-                
+
                 url = "/Private?action=productListAdmin";
                 break;
             }
             case "deleteProduct": {
                 int productID = 0;
-                
+
                 try {
                     productID = Integer.parseInt(request.getParameter("productID"));
                 } catch (NumberFormatException e) {
                     Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
                 }
-                
+
                 try {
                     MarketDB.deleteProduct(productID);
                 } catch (SQLException ex) {
                     Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 url = "/Private?action=productListAdmin";
+                break;
+            }
+            case "deleteOrder": {
+                int orderID = 0;
+
+                try {
+                    orderID = Integer.parseInt(request.getParameter("orderID"));
+                } catch (NumberFormatException e) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
+                }
+
+                try {
+                    MarketDB.deleteOrder(orderID);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                url = "/Private?action=orderList";
                 break;
             }
             case "adminUserAction": {

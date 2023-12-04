@@ -45,7 +45,7 @@
                             <br>
                             <label for="price-field">Product Price</label>
                             <br>
-                            <input type="number" id="price-field" name="productPrice" class="form-control">
+                            <input type="text" id="price-field" name="productPrice" class="form-control">
                             <br>                          
                             <button type="submit" class="btn btn-success">Add Product</button>
                         </form>

@@ -36,8 +36,9 @@
                                 <td>${product.productName}</td>
                                 <td>${product.productDetails}</td>
                                 <td>${product.productPrice}</td>
+                            <form action="Private" method="post">
                                 <td>
-                                    <select id="quantity-field" name="quantity" class="form-control">
+                                    <select id="quantity" name="quantity" class="form-control">
                                         <option value="" disabled selected>Select quantity</option>
                                         <% for (int i = 1; i <= 10; i++) {%>
                                         <option value="<%= i%>"><%= i%></option>
@@ -45,12 +46,12 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <form action="Private" method="post">
-                                        <input type="hidden" name="productID" value="${product.productID}"/>
-                                        <input type="hidden" name="action" value="addToCart">
-                                        <button type="submit" class="btn btn-success">Add To Cart</button>
-                                    </form>
+                                    <input type="hidden" name="productID" value="${product.productID}"/>
+                                    <input type="hidden" name="action" value="addToCart">
+                                    <button type="submit" class="btn btn-success">Add To Cart</button>
+
                                 </td>
+                            </form>
                             </tr>
                         </c:forEach>
                     </table>
