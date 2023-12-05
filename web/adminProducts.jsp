@@ -55,12 +55,23 @@
                             <th>Details</th>
                             <th>Price</th>
                             <th></th>
+                            <th></th>
                         </tr>
                         <c:forEach var="product" items="${allProducts}">
                             <tr>
                                 <td>${product.productName}</td>
                                 <td>${product.productDetails}</td>
                                 <td>$${product.productPrice}</td>
+                                <td style="width:11.7%">
+                                    <form action="Private" method="post">
+                                        <input type="hidden" name="productID" value="${product.productID}"/>
+                                        <input type="hidden" name="productName" value="${product.productName}"/>
+                                        <input type="hidden" name="productDetails" value="${product.productDetails}"/>
+                                        <input type="hidden" name="productPrice" value="${product.productPrice}"/>
+                                        <input type="hidden" name="action" value="updateProductPage">
+                                        <button type="submit" class="btn btn-success">Update Product</button>
+                                    </form>
+                                </td>
                                 <td style="width:11.3%">
                                     <form action="Private" method="post">
                                         <input type="hidden" name="productID" value="${product.productID}"/>

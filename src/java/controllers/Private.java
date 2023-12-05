@@ -6,7 +6,6 @@ package controllers;
 
 import business.*;
 import data.MarketDB;
-import data.security.SecurityUtil;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.*;
@@ -48,15 +47,16 @@ public class Private extends HttpServlet {
             }
             case "orderList": {
                 url = "/userPage.jsp";
-                ArrayList<Order> allOrders = new ArrayList();
+                int userID = loggedInUser.getUserID();
+                ArrayList<Order> userOrders = new ArrayList();
 
                 try {
-                    allOrders = MarketDB.selectAllOrders();
+                    userOrders = MarketDB.selectOrdersByUserID(userID);
                 } catch (SQLException e) {
                     Logger.getLogger(MarketDB.class.getName()).log(Level.SEVERE, null, e);
                 }
 
-                request.setAttribute("allOrders", allOrders);
+                request.setAttribute("userOrders", userOrders);
                 break;
             }
             case "productList": {
@@ -118,6 +118,7 @@ public class Private extends HttpServlet {
                 url = "/cart.jsp";
                 ArrayList<CartItem> cartItems = new ArrayList();
                 int userID = loggedInUser.getUserID();
+                double cartTotal = 0;
 
                 try {
                     cartItems = MarketDB.getCartItemsByUserID(userID);
@@ -125,7 +126,12 @@ public class Private extends HttpServlet {
                     Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, e);
                 }
 
+                for (CartItem cartItem : cartItems) {
+                    cartTotal += cartItem.getProductPrice() * cartItem.getQuantity();
+                }
+
                 request.setAttribute("cartItems", cartItems);
+                request.setAttribute("cartTotal", cartTotal);
                 break;
             }
             case "deleteCartItem": {
@@ -162,7 +168,7 @@ public class Private extends HttpServlet {
                 double orderTotal = 0;
 
                 for (CartItem cartItem : cartItems) {
-                    orderTotal += cartItem.getProductPrice();
+                    orderTotal += cartItem.getProductPrice() * cartItem.getQuantity();
                 }
 
                 Order order = new Order(userID, LocalDate.now(), orderTotal);
@@ -200,6 +206,37 @@ public class Private extends HttpServlet {
                 }
 
                 url = "/Private?action=productListAdmin";
+                break;
+            }
+            case "updateProductPage": {
+                url = "/updateProduct.jsp";
+
+                int productID = Integer.parseInt(request.getParameter("productID"));
+                String productName = request.getParameter("productName");
+                String productDetails = request.getParameter("productDetails");
+                double productPrice = Double.parseDouble(request.getParameter("productPrice"));
+
+                request.setAttribute("productID", productID);
+                request.setAttribute("productName", productName);
+                request.setAttribute("productDetails", productDetails);
+                request.setAttribute("productPrice", productPrice);
+                break;
+            }
+            case "updateProduct": {
+                url = "/Private?action=productListAdmin";
+                int productID = Integer.parseInt(request.getParameter("productID"));
+                String name = request.getParameter("productName");
+                String details = request.getParameter("productDetails");
+                double price = Double.parseDouble(request.getParameter("productPrice"));
+
+                Product product = new Product(productID, name, details, price);
+
+                try {
+                    MarketDB.updateProduct(product);
+                } catch (SQLException e) {
+                    Logger.getLogger(MarketDB.class.getName()).log(Level.SEVERE, null, e);
+                }
+
                 break;
             }
             case "deleteProduct": {

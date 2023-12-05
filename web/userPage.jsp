@@ -41,10 +41,10 @@
                     <div class="col-4">
                         <h1>Orders for <c:out value="${loggedInUser.username}"/></h1>
                         <br>
-                        <c:if test="${empty allOrders}">
+                        <c:if test="${empty userOrders}">
                             <h5 class="text-secondary">Start shopping now and create your first order with Web Market!</h5>
                         </c:if>
-                        <c:if test="${not empty allOrders}">
+                        <c:if test="${not empty userOrders}">
                         <table class="table table-striped table-bordered">
                             <tr class="table-dark">
                                 <th>Order ID</th>                         
@@ -52,7 +52,7 @@
                                 <th>Order Total</th>
                                 <th></th>
                             </tr>
-                            <c:forEach var="order" items="${allOrders}">
+                            <c:forEach var="order" items="${userOrders}">
                                 <tr>
                                     <td>${order.orderID}</td>
                                     <td>${order.orderDate}</td>

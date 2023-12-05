@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package data;
 
 import business.*;
@@ -12,19 +8,6 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-/*
-Current methods
---------------------------------------------------
-validateEmail(String email) - Returns a boolean on if an email already exists. Line 
-validateUsername(String username - Returns a boolean on if a username already exists. 
-insertUser(User user) - Inserts a user. Line 101
-getPasswordForUsername(String username) - Returns a password for a given username. 
-getPasswordForEmail(String email) - Returns a password for a given email.
-selectAllUsers() - Selects all of the users. Returns a LinkedHashMap with username as the Key.
-getUserInfo(String usernameOrEmail, String password) - Returns a user based on username or email, and the password.
-getUserInfo(String usernameOrEmail) - Returns a user based on the username or email.
-
- */
 /**
  *
  * @author Tony Le
@@ -338,6 +321,36 @@ public class MarketDB {
         }
     }
 
+    public static int updateProduct(Product product) throws SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "UPDATE products "
+                + "SET productName = ?, productDetails = ?, productPrice = ? "
+                + "WHERE productID = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, product.getProductName());
+            ps.setString(2, product.getProductDetails());
+            ps.setDouble(3, product.getProductPrice());
+            ps.setInt(4, product.getProductID());
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "*** update product", e);
+            throw e;
+        } finally {
+            try {
+                ps.close();
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                LOG.log(Level.SEVERE, "*** update product null pointer?", e);
+                throw e;
+            }
+        }
+    }
+
     public static int deleteCartItem(int cartID) throws SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -451,7 +464,7 @@ public class MarketDB {
         }
     }
 
-    public static ArrayList<Order> selectAllOrders() throws SQLException {
+    public static ArrayList<Order> selectOrdersByUserID(int userID) throws SQLException {
         ArrayList<Order> orders = new ArrayList();
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -459,14 +472,15 @@ public class MarketDB {
         ResultSet rs = null;
 
         String query
-                = "Select *"
-                + " FROM orders";
+                = "Select * "
+                + "FROM orders "
+                + "WHERE userID = ?";
         try {
             ps = connection.prepareStatement(query);
+            ps.setInt(1, userID);
             rs = ps.executeQuery();
             while (rs.next()) {
                 int orderID = rs.getInt("orderID");
-                int userID = rs.getInt("userID");
                 LocalDate orderDate = rs.getDate("orderDate").toLocalDate();
                 double orderTotal = rs.getDouble("orderTotal");
                 Order order = new Order(orderID, userID, orderDate, orderTotal);
@@ -549,7 +563,6 @@ public class MarketDB {
                 String productName = rs.getString("productName");
                 String productDetails = rs.getString("productDetails");
                 double productPrice = rs.getDouble("productPrice");
-                productPrice = productPrice * quantity;
 
                 CartItem cartItem = new CartItem(cartID, userID, productID, quantity, productName, productDetails, productPrice);
                 cartItems.add(cartItem);

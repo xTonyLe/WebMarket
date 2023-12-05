@@ -46,36 +46,39 @@
                         <h5 class="text-secondary">Your cart is feeling a bit lonely! 
                             It's a great time to explore our collection and add some fantastic items. 
                             Happy shopping!</h5>
-                    </c:if>
-                    <c:if test="${not empty cartItems}">
-                    <table class="table table-striped table-bordered">
-                        <tr class="table-dark">
-                            <th>Product Name</th>
-                            <th>Details</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th></th>
-                        </tr>
-                        <c:forEach var="cartItem" items="${cartItems}">
-                            <tr>
-                                <td>${cartItem.productName}</td>
-                                <td>${cartItem.productDetails}</td>
-                                <td>$${cartItem.productPrice}</td>
-                                <td style="width:1%">${cartItem.quantity}</td>
-                                <td style="width:5%">
-                                    <form action="Private" method="post">
-                                        <input type="hidden" name="cartID" value="${cartItem.cartID}"/>
-                                        <input type="hidden" name="action" value="deleteCartItem">
-                                        <button type="submit" class="btn btn-danger">Remove</button>
-                                    </form>
-                                </td>
+                        </c:if>
+                        <c:if test="${not empty cartItems}">
+                        <table class="table table-striped table-bordered">
+                            <tr class="table-dark">
+                                <th>Product Name</th>
+                                <th>Details</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th></th>
                             </tr>
-                        </c:forEach>
-                    </table>
-                    <form action="Private" method="post" style="text-align: right;">
-                        <input type="hidden" name="action" value="submitCart">
-                        <button type="submit" class="btn btn-success">Submit</button>
-                    </form>
+                            <c:forEach var="cartItem" items="${cartItems}">
+                                <tr>
+                                    <td>${cartItem.productName}</td>
+                                    <td>${cartItem.productDetails}</td>
+                                    <td>$${cartItem.productPrice}</td>
+                                    <td style="width:1%">${cartItem.quantity}</td>
+                                    <td style="width:5%">
+                                        <form action="Private" method="post">
+                                            <input type="hidden" name="cartID" value="${cartItem.cartID}"/>
+                                            <input type="hidden" name="action" value="deleteCartItem">
+                                            <button type="submit" class="btn btn-danger">Remove</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                        <div style="text-align: right;">
+                            <p>Total Price: $<c:out value="${String.format('%.2f', cartTotal)}"/></p>
+                        </div>
+                        <form action="Private" method="post" style="text-align: right;">
+                            <input type="hidden" name="action" value="submitCart">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </form>
                     </c:if>
                 </div>           
             </div>
