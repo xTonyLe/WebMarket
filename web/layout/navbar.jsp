@@ -26,6 +26,9 @@
                                 <a href="Private?action=productListAdmin" class="nav-link text-dark">Admin Products</a>
                             </li>
                             <li class="dropdown-item">
+                                <a href="Private?action=orderListAdmin" class="nav-link text-dark">Admin Orders</a>
+                            </li>
+                            <li class="dropdown-item">
                                 <a href="Private?action=adminUserAction" class="nav-link text-dark">Admin Users</a>
                             </li>
                         </ul>

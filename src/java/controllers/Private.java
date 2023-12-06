@@ -59,6 +59,19 @@ public class Private extends HttpServlet {
                 request.setAttribute("userOrders", userOrders);
                 break;
             }
+            case "orderListAdmin": {
+                url = "/adminOrders.jsp";
+                ArrayList<Order> allOrders = new ArrayList();
+                
+                try{
+                    allOrders = MarketDB.selectAllOrders();
+                } catch (SQLException e) {
+                    Logger.getLogger(MarketDB.class.getName()).log(Level.SEVERE, null, e);
+                }
+                
+                request.setAttribute("allOrders", allOrders);
+                break;
+            }
             case "productList": {
                 url = "/products.jsp";
                 ArrayList<Product> allProducts = new ArrayList();
@@ -272,7 +285,7 @@ public class Private extends HttpServlet {
                     Logger.getLogger(Private.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                url = "/Private?action=orderList";
+                url = "/Private?action=orderListAdmin";
                 break;
             }
             case "adminUserAction": {

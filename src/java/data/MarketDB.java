@@ -496,7 +496,44 @@ public class MarketDB {
                 rs.close();
                 pool.freeConnection(connection);
             } catch (SQLException e) {
-                LOG.log(Level.SEVERE, "*** get products null pointer?", e);
+                LOG.log(Level.SEVERE, "*** get orders null pointer?", e);
+                throw e;
+            }
+        }
+    }
+
+    public static ArrayList<Order> selectAllOrders() throws SQLException {
+        ArrayList<Order> orders = new ArrayList();
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query
+                = "SELECT *"
+                + " FROM orders";
+        try {
+            ps = connection.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int orderID = rs.getInt("orderID");
+                int userID = rs.getInt("userID");
+                LocalDate orderDate = rs.getDate("orderDate").toLocalDate();
+                double orderTotal = rs.getDouble("orderTotal");
+                Order order = new Order(orderID, userID, orderDate, orderTotal);
+                orders.add(order);
+            }
+            return orders;
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "*** get orders", e);
+            throw e;
+        } finally {
+            try {
+                ps.close();
+                rs.close();
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                LOG.log(Level.SEVERE, "*** get orders null pointer?", e);
                 throw e;
             }
         }

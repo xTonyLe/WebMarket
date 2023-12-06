@@ -1,6 +1,6 @@
 <%-- 
-    Document   : userPage
-    Created on : Dec 3, 2023, 11:33:22 PM
+    Document   : adminOrders
+    Created on : Dec 5, 2023, 10:15:14 PM
     Author     : Tony Le
 --%>
 
@@ -19,7 +19,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Web Market - User Page</title>
+        <title>Web Market - Admin Orders</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <style>
             .container {
@@ -39,23 +39,33 @@
                 <div class="row">
                     <div class="col-4"></div>
                     <div class="col-4">
-                        <h1>Orders for <c:out value="${loggedInUser.username}"/></h1>
+                        <h1>All Orders</h1>
                         <br>
-                        <c:if test="${empty userOrders}">
-                            <h5 class="text-secondary">Start shopping now and create your first order with Web Market!</h5>
+                        <c:if test="${empty allOrders}">
+                            <h5 class="text-secondary">No orders currently.</h5>
                         </c:if>
-                        <c:if test="${not empty userOrders}">
+                        <c:if test="${not empty allOrders}">
                         <table class="table table-striped table-bordered">
                             <tr class="table-dark">
-                                <th>Order ID</th>                         
+                                <th>Order ID</th>
+                                <th>User ID</th>
                                 <th>Order Date</th>
-                                <th>Order Total</th>                             
+                                <th>Order Total</th>
+                                <th></th>
                             </tr>
-                            <c:forEach var="order" items="${userOrders}">
+                            <c:forEach var="order" items="${allOrders}">
                                 <tr>
                                     <td>${order.orderID}</td>
-                                    <td>${order.orderDate}</td>
-                                    <td>$${order.orderTotal}</td>                                  
+                                    <td>${order.userID}</td>
+                                    <td style="width:24%">${order.orderDate}</td>
+                                    <td>$${order.orderTotal}</td>
+                                    <td style="width:5%">
+                                        <form action="Private" method="post">
+                                            <input type="hidden" name="orderID" value="${order.orderID}"/>
+                                            <input type="hidden" name="action" value="deleteOrder">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </table>
